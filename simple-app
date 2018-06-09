@@ -1,0 +1,53 @@
+
+var express = require('express');
+var app = express();
+var mysql = require('mysql');
+
+app.get('/', function(req, res){
+   res.sendFile('/home/udaykiranreddy0703/index.html');
+});
+
+app.get('/test', function(req, res){
+   res.send("Hello test!");
+});
+
+app.get('/db', function(req, res){
+	 var connection = mysql.createConnection({
+                host     : 'localhost',
+                user     : 'root',
+                password : 'root', // or the original password : 'apaswword'
+                database : 'test_db'
+            });
+            
+            // connect to mysql
+            connection.connect(function(err) {
+                // in case of error
+                if(err){
+                    console.log(err.code);
+                    console.log(err.fatal);
+                }
+            });
+            var srcdo = "'%u%'";
+             q = 'SELECT * FROM `user` where name like ';
+            finalQuery= q.concat(srcdo);
+            console.log('Final query is : '+ finalQuery);
+            $query = finalQuery;
+			var resp=null;
+            connection.query($query, function(err, rows, fields) {
+                if(err){
+                    console.log("An error ocurred performing the query.");
+                    console.log(err);
+                    return;
+                }else{
+                	resp=JSON.stringify(rows);
+                    console.log("Query succesfully executed ", JSON.stringify(rows));
+                     res.send(resp);
+                }
+               // $scope.updateData(rows);
+               // $scope.dbData = rows;
+                // printdata(rows);
+            });
+            
+  
+});
+app.listen(8080);
